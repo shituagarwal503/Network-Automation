@@ -1,0 +1,29 @@
+hostname R1-MUM-EDGE
+!
+service password-encryption
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+username admin privilege 15 secret 9 $9$nhEmQVczB7dqsO$X.HsgL6x1il0RxkOSSvyQYwucySCt7qFm4v7pqCxkKM
+username netops privilege 1 password 7 0822455D0A16
+!
+interface GigabitEthernet0/0
+ description key-server-uplink
+ ip address 10.1.1.1 255.255.255.252
+!
+interface GigabitEthernet0/1
+ description to-dc2-firewall
+ ip address 10.1.2.1 255.255.255.252
+!
+router bgp 65001
+ neighbor 10.0.0.2 remote-as 65002
+ neighbor 10.0.0.2 password 7 12090404011C03162E
+!
+snmp-server community S3cr3tRO RO
+snmp-server community Wr1teRW RW
+tacacs-server key 7 1234ABCD5678
+!
+line vty 0 4
+ password 7 0822455D0A16
+ login local
+!
+end

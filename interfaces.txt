@@ -1,0 +1,42 @@
+GigabitEthernet0/0 is up, line protocol is up
+  Hardware is iGbE, address is 5254.0012.3401 (bia 5254.0012.3401)
+  Description: uplink-to-core
+  Internet address is 10.1.1.1/30
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  5 minute input rate 2000 bits/sec, 3 packets/sec
+     120394 packets input, 15403221 bytes, 0 no buffer
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+GigabitEthernet0/1 is up, line protocol is up
+  Hardware is iGbE, address is 5254.0012.3402 (bia 5254.0012.3402)
+  Description: to-dc2-firewall
+  Internet address is 10.1.2.1/30
+  MTU 9000 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+     reliability 251/255, txload 3/255, rxload 7/255
+  5 minute input rate 88000 bits/sec, 41 packets/sec
+     8820451 packets input, 991203344 bytes, 0 no buffer
+     1532 input errors, 1497 CRC, 35 frame, 0 overrun, 0 ignored
+GigabitEthernet0/2 is administratively down, line protocol is down
+  Hardware is iGbE, address is 5254.0012.3403 (bia 5254.0012.3403)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  5 minute input rate 0 bits/sec, 0 packets/sec
+     0 packets input, 0 bytes, 0 no buffer
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+GigabitEthernet0/3 is up, line protocol is down
+  Hardware is iGbE, address is 5254.0012.3404 (bia 5254.0012.3404)
+  Description: to-branch-r7
+  Internet address is 10.1.4.1/30
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  5 minute input rate 0 bits/sec, 0 packets/sec
+     44 packets input, 5120 bytes, 0 no buffer
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+Loopback0 is up, line protocol is up
+  Hardware is Loopback
+  Internet address is 1.1.1.1/32
+  MTU 1514 bytes, BW 8000000 Kbit/sec, DLY 5000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  5 minute input rate 0 bits/sec, 0 packets/sec
+     0 packets input, 0 bytes, 0 no buffer
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored

@@ -1,0 +1,16 @@
+# Python virtual environment and caches (anyone can recreate these)
+venv/
+__pycache__/
+*.pyc
+
+# Editor settings
+.vscode/
+
+# Personal, not for a public repo
+Study_Context.md
+Revision_Notes/
+
+# Files the scripts generate when run
+report.txt
+inventory.csv
+running_config_clean.txt

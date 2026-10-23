@@ -1,0 +1,18 @@
+Cisco IOS XE Software, Version 17.09.04a
+Cisco IOS Software [Cupertino], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 17.9.4a, RELEASE SOFTWARE (fc3)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2023 by Cisco Systems, Inc.
+
+ROM: IOS-XE ROMMON
+
+R1-MUM-EDGE uptime is 12 weeks, 3 days, 4 hours, 18 minutes
+Uptime for this control processor is 12 weeks, 3 days, 4 hours, 20 minutes
+System returned to ROM by reload
+System image file is "bootflash:packages.conf"
+
+cisco C8000V (VXE) processor (revision VXE) with 1987654K/3075K bytes of memory.
+Processor board ID 9ABCDEF1234
+4 Gigabit Ethernet interfaces
+32768K bytes of non-volatile configuration memory.
+
+Configuration register is 0x2102
