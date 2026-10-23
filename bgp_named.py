@@ -1,22 +1,26 @@
 import re
 
+
 def check_bgp(file_name):
-    l=[]
+    header_found = False
+    neighbors = []
     with open(file_name) as f:
         for line in f:
-            line=line.strip()
-            m=re.search(r"^(?P<ip>\S+)\s+\d+\s+(?P<remote_as>\d+)\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+(?P<status>\S+)\s+(?P<state>.+)$",line)
-            if m:
-                l.append(m.groupdict())
-    return l
-
-result = check_bgp("bgp.txt")
-for i in result:
-     if i['state'].isdigit() and int(i['state'])!=0:
-        print(f"{i['ip']} AS{i['remote_as']} Established ({i['state']} prefixes)")
-     elif i['state'].isdigit() and int(i['state'])==0:
-         print(f"{i['ip']} AS{i['remote_as']} Established ({i['state']} prefixes) WARNING")
-     else:
-        print(f"{i['ip']} AS{i['remote_as']} {i['state']}")
+            if header_found:
+                line = line.strip()
+                m = re.search(r"^(?P<ip>\S+)\s+\d+\s+(?P<remote_as>\d+)\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+(?P<uptime>\S+)\s+(?P<state>.+)$", line)
+                if m:
+                    neighbors.append(m.groupdict())
+            if line.startswith("Neighbor"):
+                header_found = True
+    return neighbors
 
 
+neighbors = check_bgp("bgp.txt")
+for n in neighbors:
+    if n["state"].isdigit() and int(n["state"]) != 0:
+        print(f"{n['ip']} AS{n['remote_as']} Established ({n['state']} prefixes)")
+    elif n["state"].isdigit() and int(n["state"]) == 0:
+        print(f"{n['ip']} AS{n['remote_as']} Established ({n['state']} prefixes) WARNING")
+    else:
+        print(f"{n['ip']} AS{n['remote_as']} {n['state']}")

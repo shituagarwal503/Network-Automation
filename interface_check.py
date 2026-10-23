@@ -1,56 +1,54 @@
 import re
-import copy
+
 
 def check_interfaces(file_name):
+    interfaces = {}
+    current = {}
     with open(file_name) as f:
-            k,y={},{}
-            for i in f:
-                i= i.strip()
-                if 'line protocol' in i:
-                    q=re.search(r"(\S+) is (.+), line protocol is (\S+)", i)
-                    interface= q.group(1)
-                    admin_status =  q.group(2)
-                    line_status = q.group(3)
-                    y.update({"interface":interface,"admin_status":admin_status,"line_status":line_status})
-                    # y.append(interface)
-                    # y.append(admin_status)
-                    # y.append(line_status)
+        for line in f:
+            line = line.strip()
+            if 'line protocol' in line:
+                m = re.search(r"(\S+) is (.+), line protocol is (\S+)", line)
+                if m:
+                    current.update({"interface": m.group(1), "admin_status": m.group(2), "line_status": m.group(3)})
 
-                if 'MTU' in i:
-                    q=re.search(r"MTU (\d+) bytes, BW (\d+) Kbit/sec, DLY (\d+) usec,",i)
-                    mtu_value=q.group(1)
-                    y.update({"mtu_value":mtu_value})
-                    # y.append(int(mtu_value))
+            if 'MTU' in line:
+                m = re.search(r"MTU (\d+) bytes", line)
+                if m:
+                    current["mtu"] = int(m.group(1))
 
-                if 'CRC' in i:
-                    q=re.search(r"(\d+) input errors, (\d+) CRC, (\d+) frame, (\d+) overrun, (\d+) ignored",i)
-                    Error= q.group(1)
-                    mv=q.group(2)
-                    y.update({'Error':Error,"mv":mv})
-                    # y.append(Error)
-                    # y.append(mv)
-                    k[interface]=y
-                    y={}
-    return k            
-                
+            if 'CRC' in line:
+                m = re.search(r"(\d+) input errors, (\d+) CRC", line)
+                if m:
+                    current["input_errors"] = int(m.group(1))
+                    current["crc"] = int(m.group(2))
+                    # the CRC line is the last one we need, so this interface is complete
+                    interfaces[current["interface"]] = current
+                    current = {}
+    return interfaces
 
 
-result = check_interfaces("interfaces.txt")
-n=0
+interfaces = check_interfaces("interfaces.txt")
+issues = 0
 
 # one loop per issue type, so the output is grouped: DOWN, ADMIN-DOWN, CRC, JUMBO
-for item in result:
-    if result[item]['admin_status']=='down' or result[item]['line_status']!='administratively down':
-        print(f"DOWN: {result[item]['interface']} status={result[item]['admin_status']} protocol={result[item]['line_status']}")
-        n+=1
-    if int(result[item]['mv'])>0:
-        print(f"CRC: {result[item]['interface']} crc={result[item]['mv']} input_errors={result[item]['Error']}")
-        n+=1
+for name in interfaces:
+    intf = interfaces[name]
+    if intf["line_status"] == "down" and intf["admin_status"] != "administratively down":
+        print(f"DOWN: {name} status={intf['admin_status']} protocol={intf['line_status']}")
+        issues += 1
+for name in interfaces:
+    if interfaces[name]["admin_status"] == "administratively down":
+        print(f"ADMIN-DOWN: {name}")
+        issues += 1
+for name in interfaces:
+    intf = interfaces[name]
+    if intf["crc"] > 0:
+        print(f"CRC: {name} crc={intf['crc']} input_errors={intf['input_errors']}")
+        issues += 1
+for name in interfaces:
     # loopbacks are virtual, 1514 is their default MTU, so skip them
-    if result[item]['mtu_value']!= '1500' and not result[item]['interface'].startswith("Loopback"):
-        print(f"JUMBO: {result[item]['interface']} mtu={result[item]['mtu_value']}")
-        n+=1
-print(f"{n} issues on {len(result)} interfaces")
-
-
-
+    if interfaces[name]["mtu"] != 1500 and not name.startswith("Loopback"):
+        print(f"JUMBO: {name} mtu={interfaces[name]['mtu']}")
+        issues += 1
+print(f"{issues} issues on {len(interfaces)} interfaces")

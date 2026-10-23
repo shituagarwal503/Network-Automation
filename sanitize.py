@@ -1,23 +1,20 @@
 import re
 
-def sanitize(in_file,out_file):
-    with open(in_file) as f:
-        n=0
-        with open(out_file,"w") as q:
-            for l in f:
-                print(f"l======>{l}")
-                s = re.sub(r"(secret|password|key)\s+(\d+)(.+)$",r"\1 \2 <removed>",l)
-                print(f"s------>{s}")
-                t= re.sub(r"(community)\s(\S+)\s(\S+)",r"\1 <removed> \3",s)   
-                print(f"t----->{t}")            
-                if t!=l:
-                    n+=1
-                q.write(t)
-        return n
+
+def sanitize(in_file, out_file):
+    masked = 0
+    with open(in_file) as in_f, open(out_file, "w") as out_f:
+        for line in in_f:
+            # keep the keyword and type digit, e.g. "secret 5 <removed>"
+            clean = re.sub(r"(secret|password|key)\s+(\d+)(.+)$", r"\1 \2 <removed>", line)
+            # SNMP communities have no type digit: "community <removed> RO"
+            clean = re.sub(r"(community)\s(\S+)\s(\S+)", r"\1 <removed> \3", clean)
+            if clean != line:
+                masked += 1
+            # write every line, changed or not, so the config stays complete
+            out_f.write(clean)
+    return masked
 
 
-
-
-
-n=sanitize(in_file='running_config.txt',out_file="running_config_clean.txt")
-print(f"masked {n}")
+masked = sanitize(in_file="running_config.txt", out_file="running_config_clean.txt")
+print(f"masked {masked}")
